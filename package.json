@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "wrangler dev",
-    "build": "mkdir -p dist && cp -r src package.json wrangler.toml dist/",
     "deploy": "wrangler deploy"
   },
   "dependencies": {

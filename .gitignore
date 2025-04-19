@@ -13,7 +13,6 @@ mito_distribution.png
 
 # Temporary files
 *.sql
-!mito-holders-backup.sql
 *.tmp
 *.log
 batch*.sql

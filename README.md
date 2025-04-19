@@ -47,25 +47,15 @@ GET /api/stats
 ```
 Get comprehensive statistics about token distribution.
 
-## Deployment Options
+## Development Setup
 
-### 1. Deploy via Cloudflare Dashboard (Recommended)
-
-This repository includes a **`mito-holders-backup.sql`** file containing the database schema and data. You can deploy directly from GitHub using the Cloudflare Dashboard.
-
-See [DEPLOY.md](DEPLOY.md) for detailed step-by-step instructions.
-
-### 2. Manual Setup (Alternative)
-
-If you prefer to set up manually:
-
-#### Prerequisites
+### Prerequisites
 
 - Node.js (v16 or higher)
 - npm or yarn
 - Wrangler CLI (Cloudflare Workers development tool)
 
-#### Installation
+### Installation
 
 1. Clone this repository:
 ```bash
@@ -84,33 +74,22 @@ npm install -g wrangler
 wrangler login
 ```
 
-#### Database Setup
+### Database Setup
 
-There are two ways to set up the database:
+The API uses Cloudflare D1 for database storage. The database is populated from a reranked CSV file of MITO holders (excluding the top 14 whale wallets):
 
-**Option A: Import from SQL backup:**
 ```bash
-# Create a new D1 database
-npx wrangler d1 create mito-holders
-
-# Import the provided SQL backup
-npx wrangler d1 import mito-holders --file=mito-holders-backup.sql --remote
-```
-
-**Option B: Import from CSV (if you have the original CSV):**
-```bash
-# Run the import script
 node import_to_db.js
 ```
 
-#### Local Development
+### Local Development
 
 Start a local development server:
 ```bash
 npm run dev
 ```
 
-#### Deployment
+### Deployment
 
 Deploy to Cloudflare Workers:
 ```bash
@@ -122,7 +101,6 @@ npm run deploy
 - `src/index.js` - Main API implementation with all route handlers
 - `import_to_db.js` - Script to import data from CSV to Cloudflare D1
 - `wrangler.toml` - Cloudflare Workers configuration
-- `mito-holders-backup.sql` - Full database backup for easy deployment
 
 ## Technical Notes
 
