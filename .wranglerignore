@@ -1,0 +1,29 @@
+# Version control
+.git/
+
+# Node.js import script
+import_to_db.js
+
+# Python scripts
+*.py
+
+# CSV data files
+*.csv
+
+# SQL files (schema and batch files are not needed at runtime)
+*.sql
+
+# Documentation
+README.md
+
+# Analysis output files
+mito_analysis_report.txt
+mito_stats.json
+mito_distribution.png
+
+# Editor/IDE specific files
+.vscode/
+*.log
+
+# Node modules (Wrangler typically handles bundling, but good practice)
+# node_modules/ 

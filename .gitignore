@@ -1,0 +1,37 @@
+# Data files
+*.csv
+*.sqlite
+*.db
+*.json
+!package.json
+!package-lock.json
+
+# Python scripts and outputs
+*.py
+mito_analysis_report.txt
+mito_distribution.png
+
+# Temporary files
+*.sql
+*.tmp
+*.log
+batch*.sql
+
+# Development environment
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+node_modules/
+.wrangler/
+
+# Local D1 database
+.D1/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo 

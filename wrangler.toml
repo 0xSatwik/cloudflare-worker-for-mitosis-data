@@ -1,0 +1,12 @@
+
+name = "mito-api"
+main = "src/index.js"
+compatibility_date = "2023-10-02"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mito-holders"
+database_id = "2072363a-4678-4110-a667-41a3e6dfb9e9"
