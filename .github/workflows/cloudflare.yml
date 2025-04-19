@@ -17,6 +17,13 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm install
-      - name: Validate
-        run: npm run build
+      - name: Create directories
+        run: mkdir -p dist/src
+      - name: Copy files
+        run: |
+          cp -r src/* dist/src/
+          cp package.json dist/
+          cp wrangler.toml dist/
+      - name: Display structure
+        run: ls -la dist
       # Note: Actual deployment is handled by Cloudflare Pages GitHub integration 

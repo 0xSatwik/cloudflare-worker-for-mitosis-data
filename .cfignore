@@ -1,0 +1,9 @@
+# Ignore everything by default
+*
+
+# Allow only the necessary files
+!src/
+!src/**/*
+!wrangler.toml
+!package.json
+!package-lock.json 

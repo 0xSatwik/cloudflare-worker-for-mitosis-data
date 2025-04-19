@@ -17,6 +17,12 @@ The following files should be included in your GitHub repository:
 - `.github/workflows/cloudflare.yml` - GitHub Actions workflow
 - `.gitignore` - Git ignore rules
 
+**Cloudflare Pages specific files:**
+- `index.html` - Simple redirect to the API documentation
+- `_routes.json` - Cloudflare Pages routing configuration
+- `.cfignore` - Tells Cloudflare Pages which files to include/exclude
+- `cloudflare-pages.json` - Build configuration for Cloudflare Pages
+
 ## Setting Up GitHub Repository
 
 1. Create a new repository on GitHub
@@ -39,4 +45,5 @@ After pushing to GitHub, follow the instructions in [DEPLOY.md](DEPLOY.md) to se
 - The `mito-holders-backup.sql` file is crucial for deployment - it contains your database schema and data
 - When setting up in Cloudflare, you'll need to create a new D1 database and import this SQL file
 - Configure the D1 database binding in the Cloudflare dashboard to connect your Worker to the database
-- Make sure the binding is named `DB` exactly as it appears in the code 
+- Make sure the binding is named `DB` exactly as it appears in the code
+- If deployment fails with a build error, check the Cloudflare Pages settings to ensure the build command and output directory match what's in `cloudflare-pages.json` 
