@@ -1,0 +1,67 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Check for D1 Database
+        id: check_db
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          wranglerVersion: '3'
+          command: d1 list --json
+      
+      - name: Create Database If Needed
+        id: create_db
+        if: ${{ !contains(steps.check_db.outputs.result, 'mito-holders') }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          wranglerVersion: '3'
+          command: d1 create mito-holders
+      
+      - name: Extract Database ID
+        id: extract_db_id
+        if: ${{ steps.create_db.outcome == 'success' }}
+        run: |
+          DB_ID=$(echo '${{ steps.create_db.outputs.result }}' | grep -o 'database_id = "[^"]*"' | cut -d'"' -f2)
+          echo "DB_ID=$DB_ID" >> $GITHUB_ENV
+          
+      - name: Update wrangler.toml
+        if: ${{ steps.create_db.outcome == 'success' && env.DB_ID != '' }}
+        run: |
+          sed -i "s/database_id = \".*\"/database_id = \"${{ env.DB_ID }}\"/" wrangler.toml
+          
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          wranglerVersion: '3'
+          command: deploy
+          
+      - name: Apply Schema (Only On First Deployment)
+        if: ${{ steps.create_db.outcome == 'success' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          wranglerVersion: '3'
+          command: d1 execute mito-holders --file=schema.sql --remote
+          
+      # Note: Data import likely needs to be handled separately for large datasets
