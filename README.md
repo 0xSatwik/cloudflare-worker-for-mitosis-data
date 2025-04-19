@@ -96,41 +96,6 @@ Deploy to Cloudflare Workers:
 npm run deploy
 ```
 
-### GitHub to Cloudflare Deployment
-
-To deploy this project directly from GitHub to Cloudflare:
-
-1. **Create the D1 database first**:
-   ```bash
-   # Log in to Cloudflare if not already logged in
-   wrangler login
-   
-   # Create the D1 database
-   wrangler d1 create mito-holders
-   ```
-
-2. **Note the database_id** from the output, which looks like:
-   ```
-   [[d1_databases]]
-   binding = "DB"
-   database_name = "mito-holders" 
-   database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-   ```
-
-3. **Update wrangler.toml** in your GitHub repository with the correct database_id.
-
-4. **Configure GitHub integration** in your Cloudflare dashboard:
-   - Go to Cloudflare Dashboard > Workers & Pages
-   - Click "Create Application" > "Connect to Git"
-   - Select your repository and configure build settings:
-     - Build command: `npm install && npm run build`
-     - Build output directory: `dist` (or leave empty if not using a build step)
-     - Root directory: `/`
-
-5. **Import the data**:
-   - After successful deployment, you still need to populate the database with the holders data.
-   - Either run `node import_to_db.js` locally with the `--remote` flag, or import the data through the Cloudflare dashboard.
-
 ## Project Structure
 
 - `src/index.js` - Main API implementation with all route handlers

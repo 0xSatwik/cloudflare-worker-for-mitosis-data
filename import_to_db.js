@@ -12,51 +12,24 @@ async function main() {
   
   console.log(`Importing data from ${inputFile} to D1 database...`);
   
-  // Read current wrangler.toml to check for existing database ID
-  let existingDbId = null;
-  let createNewDb = true;
-
+  // Create D1 database
+  console.log('Creating D1 database...');
   try {
-    if (fs.existsSync('wrangler.toml')) {
-      const wranglerContent = fs.readFileSync('wrangler.toml', 'utf8');
-      const dbIdMatch = wranglerContent.match(/database_id\s*=\s*"([^"]+)"/);
-      
-      if (dbIdMatch && dbIdMatch[1] && dbIdMatch[1].length > 10 && dbIdMatch[1] !== 'your-database-id-here') {
-        existingDbId = dbIdMatch[1];
-        console.log(`Found existing database ID in wrangler.toml: ${existingDbId}`);
-        createNewDb = false;
-      }
-    }
-  } catch (error) {
-    console.error('Error reading wrangler.toml:', error.message);
-  }
-  
-  // Create D1 database if needed
-  let dbId = existingDbId;
-  
-  if (createNewDb) {
-    console.log('Creating D1 database...');
-    try {
-      const createDbOutput = execSync('npx wrangler d1 create mito-holders').toString();
-      console.log(createDbOutput);
-      
-      // Extract database ID from output
-      const dbIdMatch = createDbOutput.match(/database_id\s*=\s*"([^"]+)"/);
-      if (!dbIdMatch) {
-        console.error('Failed to extract database ID');
-        return;
-      }
-      
-      dbId = dbIdMatch[1];
-      console.log(`Database ID: ${dbId}`);
-    } catch (error) {
-      console.error('Error creating database:', error.message);
+    const createDbOutput = execSync('npx wrangler d1 create mito-holders').toString();
+    console.log(createDbOutput);
+    
+    // Extract database ID from output
+    const dbIdMatch = createDbOutput.match(/database_id\s*=\s*"([^"]+)"/);
+    if (!dbIdMatch) {
+      console.error('Failed to extract database ID');
       return;
     }
-  }
-  
-  // Update wrangler.toml with the database ID
-  let wranglerConfig = `
+    
+    const dbId = dbIdMatch[1];
+    console.log(`Database ID: ${dbId}`);
+    
+    // Update wrangler.toml with the actual database ID
+    let wranglerConfig = `
 name = "mito-api"
 main = "src/index.js"
 compatibility_date = "2023-10-02"
@@ -64,16 +37,19 @@ compatibility_date = "2023-10-02"
 [vars]
 ENVIRONMENT = "production"
 
-# For GitHub deployments, you need to create the D1 database first in the Cloudflare dashboard 
-# or via wrangler CLI, then paste the database_id here.
 [[d1_databases]]
 binding = "DB"
 database_name = "mito-holders"
 database_id = "${dbId}"
 `;
-  
-  fs.writeFileSync('wrangler.toml', wranglerConfig);
-  console.log('Created/updated wrangler.toml with database configuration');
+    
+    fs.writeFileSync('wrangler.toml', wranglerConfig);
+    console.log('Created wrangler.toml with database configuration');
+    
+  } catch (error) {
+    console.error('Error creating database:', error.message);
+    return;
+  }
   
   // Create schema
   console.log('Creating database schema...');

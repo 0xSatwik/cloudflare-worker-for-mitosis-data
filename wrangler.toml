@@ -1,3 +1,4 @@
+
 name = "mito-api"
 main = "src/index.js"
 compatibility_date = "2023-10-02"
@@ -5,9 +6,7 @@ compatibility_date = "2023-10-02"
 [vars]
 ENVIRONMENT = "production"
 
-# For GitHub deployments, you need to create the D1 database first in the Cloudflare dashboard 
-# or via wrangler CLI, then paste the database_id here.
 [[d1_databases]]
 binding = "DB"
 database_name = "mito-holders"
-database_id = "2072363a-4678-4110-a667-41a3e6dfb9e9" # Replace this with your database ID if deploying from GitHub
+database_id = "2072363a-4678-4110-a667-41a3e6dfb9e9"
